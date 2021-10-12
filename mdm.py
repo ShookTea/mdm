@@ -1,15 +1,17 @@
 #!/usr/local/bin/python3
 
+from posixpath import dirname
 from types import AsyncGeneratorType
 import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 from dataclasses import dataclass
 from typing import Iterator, List
-from locale import atof, setlocale, LC_NUMERIC
+from locale import atof, setlocale, LC_NUMERIC, locale_alias
 from hashlib import md5
 import os, re
+from git import Repo
 
-setlocale(LC_NUMERIC, 'pl_pl.UTF-8')
+setlocale(LC_NUMERIC, locale_alias['pl'])
 
 url = 'https://www.mdm.pl/ui-pub/site/analizy_i_rynek/analizy_i_rekomendacje/analiza_fundamentalna/rekomendacje'
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -70,6 +72,15 @@ class RecommendationFile:
             result = result + entry.toMarkdown() + "\n"
         return result
 
+    def __hashBase(self) -> str:
+        result = ""
+        for entry in self.recommendations:
+            result = result + entry.hash()
+        return result
+
+    def hash(self) -> str:
+        return md5(self.__hashBase().encode()).hexdigest()[0:4]
+
 
 def loadCurrentRecommendations() -> Iterator[Recommendation]:
     response = urllib.request.urlopen(url)
@@ -112,3 +123,13 @@ for newEntry in loadCurrentRecommendations():
 f = open(file, "w")
 f.write(recFile.toMarkdown())
 f.close()
+
+repo = Repo(dir_path)
+
+needCommit = len(repo.index.diff(None)) > 0
+if needCommit:
+    message = 'Update with date ' + recFile.date + ' and hash ' + recFile.hash()
+    repo.git.add(update=True)
+    repo.index.commit(message)
+    origin = repo.remote(name='origin')
+    origin.push()
