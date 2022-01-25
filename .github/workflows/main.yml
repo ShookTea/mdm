@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: pip3 install beautifulsoup4
       - name: Run script
         run: python3 mdm.py
       - name: Commit
