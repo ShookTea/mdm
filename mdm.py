@@ -9,7 +9,6 @@ from typing import Iterator, List
 from locale import atof, setlocale, LC_NUMERIC, locale_alias
 from hashlib import md5
 import os, re
-from git import Repo
 
 setlocale(LC_NUMERIC, locale_alias['pl'])
 
@@ -123,13 +122,3 @@ for newEntry in loadCurrentRecommendations():
 f = open(file, "w")
 f.write(recFile.toMarkdown())
 f.close()
-
-repo = Repo(dir_path)
-
-needCommit = len(repo.index.diff(None)) > 0
-if needCommit:
-    message = 'Update with date ' + recFile.date + ' and hash ' + recFile.hash()
-    repo.git.add(update=True)
-    repo.index.commit(message)
-    origin = repo.remote(name='origin')
-    origin.push()
