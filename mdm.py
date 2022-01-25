@@ -6,7 +6,6 @@ import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 from dataclasses import dataclass
 from typing import Iterator, List
-from locale import atof
 from hashlib import md5
 import os, re
 
@@ -91,7 +90,9 @@ def loadCurrentRecommendations() -> Iterator[Recommendation]:
         company, _, date, priceOnPublication, _, estimation, *_ = cellText
         if not re.match("^([0-9,.]+)$", estimation):
             continue
-        yield Recommendation(company, date, atof(priceOnPublication), atof(estimation))
+        priceOnPublication = float(priceOnPublication.replace(",", "."))
+        estimation = float(estimation.replace(",", "."))
+        yield Recommendation(company, date, priceOnPublication, estimation)
 
 def readRecommendationFile():
     if not os.path.isfile(file):
