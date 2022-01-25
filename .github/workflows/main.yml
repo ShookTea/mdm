@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run script
+        run: python3 mdm.py
+      - name: Commit
+        run: |
+          git config --global user.name 'Norbert Kowalik'
+          git config --global user.email 'shooktea@users.noreply.github.com'
+          git commit -am "Automated report at $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
