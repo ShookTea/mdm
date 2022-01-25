@@ -19,5 +19,5 @@ jobs:
         run: |
           git config --global user.name 'Norbert Kowalik'
           git config --global user.email 'shooktea@users.noreply.github.com'
-          git commit -am "Automated report at $(date +'%Y-%m-%d %H:%M:%S')"
+          git commit -am "Automated report at $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes detected"
           git push
