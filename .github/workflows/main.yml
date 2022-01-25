@@ -11,7 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: pip3 install beautifulsoup4
+        run: |
+          pip3 install beautifulsoup4
+          /usr/share/locales/install-language-pack pl
       - name: Run script
         run: python3 mdm.py
       - name: Commit
