@@ -107,8 +107,8 @@ def readRecommendationFile():
         recommendations.append(Recommendation(
             company.strip(),
             date.strip(),
-            atof(startPrice.strip()),
-            atof(endPrice.strip())
+            float(startPrice.strip().replace(",", ".")),
+            float(endPrice.strip().replace(",", "."))
         ))
     f.close()
     return RecommendationFile(recommendations, dateRow)
