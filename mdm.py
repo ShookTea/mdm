@@ -6,11 +6,9 @@ import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 from dataclasses import dataclass
 from typing import Iterator, List
-from locale import atof, setlocale, LC_NUMERIC, locale_alias
+from locale import atof
 from hashlib import md5
 import os, re
-
-setlocale(LC_NUMERIC, locale_alias['pl'])
 
 url = 'https://www.mdm.pl/ui-pub/site/analizy_i_rynek/analizy_i_rekomendacje/analiza_fundamentalna/rekomendacje'
 dir_path = os.path.dirname(os.path.realpath(__file__))
